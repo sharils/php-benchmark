@@ -1,0 +1,22 @@
+{
+    "name": "sharils/benchmark",
+    "description": "Benchmark PHP",
+    "autoload": {
+        "psr-4": {
+            "Sharils\\": "./src/"
+        }
+    },
+    "require": {
+        "php": "^5.6"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.3.*"
+    },
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "sharils",
+            "email": "sharils@users.noreply.github.com"
+        }
+    ]
+}

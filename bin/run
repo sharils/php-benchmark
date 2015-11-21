@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+
+$profiler = new Sharils\Profiler();
+$profiler->setUp($argv[1]);
+$profiler->tearDown($argv[2]);
+$profiles = $profiler->profile(array_slice($argv, 3));
+foreach ($profiles as $profile) {
+    $profile->ratio = $profile->time / $profiles[0]->time;
+    foreach ($profile as $profileKey => $profileVal) {
+        printf("%8s: %s\n", $profileKey, $profileVal);
+    }
+}
