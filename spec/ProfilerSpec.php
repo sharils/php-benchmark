@@ -20,12 +20,12 @@ class ProfilerSpec extends ObjectBehavior
         ])->shouldBeLikeObjects([
             (object) [
                 'snippet' => 'method_exists($c, "asdf")',
-                'filename' => '/tmp/php-profiler-68ffb07616592eac90c254f3de81b96e',
+                'filename' => '/tmp/php-profiler-6393db8fc3419cdbe69bb936052d55c3',
                 'time' => 0.56867098808289,
             ],
             (object) [
                 'snippet' => 'is_callable([$c, "asdf"])',
-                'filename' => '/tmp/php-profiler-e760e282d677e21622fd494dee150892',
+                'filename' => '/tmp/php-profiler-73d65b5e2fe1987efce58f48f88bf229',
                 'time' => 0.82373595237732,
             ]
         ]);

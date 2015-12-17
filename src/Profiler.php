@@ -44,9 +44,7 @@ PHP;
 
     public function profile(array $snippets)
     {
-        $phps = array_map([$this, 'toPhp'], $snippets);
-
-        $filenames = array_map([$this, 'toFilename'], $phps);
+        $filenames = array_map([$this, 'toFilename'], $snippets);
 
         $times = array_map([$this, 'toTime'], $filenames);
 
@@ -84,19 +82,22 @@ PHP;
         return $low->time < $high->time ? -1 : 1;
     }
 
-    private function toFilename($content)
+    private function toFilename($snippet)
     {
-        assert('is_string($content)');
+        assert('is_string($snippet)');
 
         $filename = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             self::FILENAME_PREFIX .
-            md5($content);
-
+            md5($snippet);
         assert('$filename !== false');
 
-        $success = file_put_contents($filename, $content);
-        assert('$success !== false');
+        if (!is_readable($filename)) {
+            $content = $this->toPhp($snippet);
+
+            $success = file_put_contents($filename, $content);
+            assert('$success !== false');
+        }
 
         return $filename;
     }
