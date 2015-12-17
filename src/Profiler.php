@@ -13,7 +13,7 @@ assert('$success !== false');
 %s;
 
 $_ = microtime(true);
-for ($__ = %d; $__--; ) {
+for ($__ = %d; --$__; ) {
     %s;
 }
 $_ = microtime(true) - $_;
