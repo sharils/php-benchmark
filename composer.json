@@ -18,5 +18,8 @@
             "name": "sharils",
             "email": "sharils@users.noreply.github.com"
         }
+    ],
+    "bin": [
+        "./bin/run"
     ]
 }
