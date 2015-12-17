@@ -1,9 +1,9 @@
 <?php
 namespace Sharils;
 
-class Profiler
+class Phrofiler
 {
-    const FILENAME_PREFIX = 'php-profiler-';
+    const FILENAME_PREFIX = 'php-phrofiler-';
 
     const TEMPLATE = <<<'PHP'
 <?php

@@ -5,11 +5,11 @@ namespace spec\Sharils;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class ProfilerSpec extends ObjectBehavior
+class PhrofilerSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
-        $this->shouldHaveType('Sharils\Profiler');
+        $this->shouldHaveType('Sharils\Phrofiler');
     }
 
     function it_returns_report() {
@@ -20,12 +20,12 @@ class ProfilerSpec extends ObjectBehavior
         ])->shouldBeLikeObjects([
             (object) [
                 'snippet' => 'method_exists($c, "asdf")',
-                'filename' => '/tmp/php-profiler-6393db8fc3419cdbe69bb936052d55c3',
+                'filename' => '/tmp/php-phrofiler-6393db8fc3419cdbe69bb936052d55c3',
                 'time' => 0.56867098808289,
             ],
             (object) [
                 'snippet' => 'is_callable([$c, "asdf"])',
-                'filename' => '/tmp/php-profiler-73d65b5e2fe1987efce58f48f88bf229',
+                'filename' => '/tmp/php-phrofiler-73d65b5e2fe1987efce58f48f88bf229',
                 'time' => 0.82373595237732,
             ]
         ]);

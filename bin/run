@@ -2,10 +2,10 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-$profiler = new Sharils\Profiler();
-$profiler->setUp($argv[1]);
-$profiler->tearDown($argv[2]);
-$profiles = $profiler->profile(array_slice($argv, 3));
+$phrofiler = new Sharils\Phrofiler();
+$phrofiler->setUp($argv[1]);
+$phrofiler->tearDown($argv[2]);
+$profiles = $phrofiler->profile(array_slice($argv, 3));
 foreach ($profiles as $profile) {
     $profile->filename = "php $profile->filename";
     $profile->php = "php -r '{$argv[1]}; $profile->snippet; {$argv[2]};'";
