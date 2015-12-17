@@ -7,10 +7,12 @@ $profiler->setUp($argv[1]);
 $profiler->tearDown($argv[2]);
 $profiles = $profiler->profile(array_slice($argv, 3));
 foreach ($profiles as $profile) {
-    $profile->ratio = $profile->time / $profiles[0]->time;
-    $profile->time .= ' (average seconds)';
+    $profile->filename = "php $profile->filename";
     $profile->php = "php -r '{$argv[1]}; $profile->snippet; {$argv[2]};'";
-    foreach ($profile as $profileKey => $profileVal) {
-        printf("%8s: %s\n", $profileKey, $profileVal);
+    $profile->ratio = round($profile->time / $profiles[0]->time * 100) . '%';
+    $profile->time .= ' (average seconds)';
+    foreach (['snippet', 'filename', 'php', 'time', 'ratio'] as $profileKey) {
+        printf("%8s: %s\n", $profileKey, $profile->$profileKey);
     }
+    echo PHP_EOL;
 }
