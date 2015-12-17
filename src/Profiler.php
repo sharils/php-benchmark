@@ -25,11 +25,13 @@ ob_clean();
 echo $_;
 PHP;
 
-    private $count = 1000000;
+    private $count = 100000;
 
     private $setUp = null;
 
     private $tearDown = null;
+
+    private $times = 10;
 
     public function count($count = null)
     {
@@ -124,6 +126,12 @@ PHP;
     {
         assert('is_readable($filename)');
 
-        return (double) `php $filename`;
+        for ($timeCnt = 0; $timeCnt < $this->times; $timeCnt++) {
+            $times[] = (double) `php $filename`;
+        }
+
+        $time = array_sum($times) / $this->times;
+
+        return $time;
     }
 }
