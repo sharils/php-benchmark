@@ -6,6 +6,7 @@ class Phrofiler
     const FILENAME_PREFIX = 'php-phrofiler-';
 
     const TEMPLATE = <<<'PHP'
+#!/usr/bin/env php
 <?php
 $success = ob_start();
 assert('$success !== false');
@@ -98,6 +99,9 @@ PHP;
             $content = $this->toPhp($snippet);
 
             $success = file_put_contents($filename, $content);
+            assert('$success !== false');
+
+            $success = chmod($filename, 0777);
             assert('$success !== false');
         }
 

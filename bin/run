@@ -7,7 +7,6 @@ $phrofiler->setUp($argv[1]);
 $phrofiler->tearDown($argv[2]);
 $profiles = $phrofiler->profile(array_slice($argv, 3));
 foreach ($profiles as $profile) {
-    $profile->filename = "php $profile->filename";
     $profile->php = "php -r '{$argv[1]}; $profile->snippet; {$argv[2]};'";
     $profile->ratio = round($profile->time / $profiles[0]->time * 100) . '%';
     $profile->time .= ' (average seconds)';
