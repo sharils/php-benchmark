@@ -7,12 +7,13 @@ use Prophecy\Argument;
 
 class PhrofilerSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Sharils\Phrofiler');
     }
 
-    function it_returns_report() {
+    public function it_returns_report()
+    {
         $this->setUp('class C{}; $c = new C;');
         $this->profile([
             'method_exists($c, "asdf")',
