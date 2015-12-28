@@ -26,6 +26,18 @@ ob_clean();
 echo $_;
 PHP;
 
+    const WHOLE_FILENAME_PREFIX = 'php-phrofiler-whole-';
+
+    const WHOLE_TEMPLATE = <<<'PHP'
+#!/usr/bin/env php
+<?php
+%s;
+
+%s;
+
+%s;
+PHP;
+
     private $loopCount = 100000;
 
     private $setUp = null;
@@ -49,9 +61,11 @@ PHP;
     {
         $timeFilenames = array_map([$this, 'toTimeFilename'], $snippets);
 
+        $wholeFilenames = array_map([$this, 'toWholeFilename'], $snippets);
+
         $times = array_map([$this, 'toTime'], $timeFilenames);
 
-        $data = array_map([$this, 'toObject'], $snippets, $timeFilenames, $times);
+        $data = array_map([$this, 'toObject'], $snippets, $timeFilenames, $wholeFilenames, $times);
 
         usort($data, [$this, 'lowToHigh']);
 
@@ -85,45 +99,9 @@ PHP;
         return $low->time < $high->time ? -1 : 1;
     }
 
-    private function toTimeFilename($snippet)
-    {
-        assert('is_string($snippet)');
-
-        $timeFilename = sys_get_temp_dir() .
-            DIRECTORY_SEPARATOR .
-            self::TIME_FILENAME_PREFIX .
-            md5($snippet);
-        assert('$timeFilename !== false');
-
-        if (!is_readable($timeFilename)) {
-            $content = $this->toPhp($snippet);
-
-            $success = file_put_contents($timeFilename, $content);
-            assert('$success !== false');
-
-            $success = chmod($timeFilename, 0777);
-            assert('$success !== false');
-        }
-
-        return $timeFilename;
-    }
-
-    private function toObject($snippet, $timeFilename, $time)
+    private function toObject($snippet, $timeFilename, $wholeFilename, $time)
     {
         return (object) get_defined_vars();
-    }
-
-    private function toPhp($snippet)
-    {
-        assert('is_string($snippet)');
-
-        return sprintf(
-            self::TIME_TEMPLATE,
-            $this->setUp(),
-            $this->loopCount(),
-            $snippet,
-            $this->tearDown()
-        );
     }
 
     private function toTime($filename)
@@ -137,5 +115,76 @@ PHP;
         $time = array_sum($times) / $this->timeCount;
 
         return $time;
+    }
+
+    private function toTimeFilename($snippet)
+    {
+        assert('is_string($snippet)');
+
+        $timeFilename = sys_get_temp_dir() .
+            DIRECTORY_SEPARATOR .
+            self::TIME_FILENAME_PREFIX .
+            md5($snippet);
+        assert('$timeFilename !== false');
+
+        if (!is_readable($timeFilename)) {
+            $content = $this->toTimePhp($snippet);
+
+            $success = file_put_contents($timeFilename, $content);
+            assert('$success !== false');
+
+            $success = chmod($timeFilename, 0777);
+            assert('$success !== false');
+        }
+
+        return $timeFilename;
+    }
+
+    private function toTimePhp($snippet)
+    {
+        assert('is_string($snippet)');
+
+        return sprintf(
+            self::TIME_TEMPLATE,
+            $this->setUp(),
+            $this->loopCount(),
+            $snippet,
+            $this->tearDown()
+        );
+    }
+
+    private function toWholeFilename($snippet)
+    {
+        assert('is_string($snippet)');
+
+        $wholeFilename = sys_get_temp_dir() .
+            DIRECTORY_SEPARATOR .
+            self::WHOLE_FILENAME_PREFIX .
+            md5($snippet);
+        assert('$wholeFilename !== false');
+
+        if (!is_readable($wholeFilename)) {
+            $content = $this->toWholePhp($snippet);
+
+            $success = file_put_contents($wholeFilename, $content);
+            assert('$success !== false');
+
+            $success = chmod($wholeFilename, 0777);
+            assert('$success !== false');
+        }
+
+        return $wholeFilename;
+    }
+
+    private function toWholePhp($snippet)
+    {
+        assert('is_string($snippet)');
+
+        return sprintf(
+            self::WHOLE_TEMPLATE,
+            $this->setUp(),
+            $snippet,
+            $this->tearDown()
+        );
     }
 }
