@@ -3,9 +3,9 @@ namespace Sharils;
 
 class Phrofiler
 {
-    const FILENAME_PREFIX = 'php-phrofiler-';
+    const TIME_FILENAME_PREFIX = 'php-phrofiler-time-';
 
-    const TEMPLATE = <<<'PHP'
+    const TIME_TEMPLATE = <<<'PHP'
 #!/usr/bin/env php
 <?php
 $success = ob_start();
@@ -26,32 +26,32 @@ ob_clean();
 echo $_;
 PHP;
 
-    private $count = 100000;
+    private $loopCount = 100000;
 
     private $setUp = null;
 
     private $tearDown = null;
 
-    private $times = 10;
+    private $timeCount = 10;
 
-    public function count($count = null)
+    public function loopCount($loopCount = null)
     {
         if (func_num_args() === 0) {
-            return $this->count;
+            return $this->loopCount;
         } else {
-            assert('is_int($count) && 0 < $count && $count <= 1000000');
+            assert('is_int($loopCount) && 0 < $loopCount && $loopCount <= 1000000');
 
-            $this->count = $count;
+            $this->loopCount = $loopCount;
         }
     }
 
     public function profile(array $snippets)
     {
-        $filenames = array_map([$this, 'toFilename'], $snippets);
+        $timeFilenames = array_map([$this, 'toTimeFilename'], $snippets);
 
-        $times = array_map([$this, 'toTime'], $filenames);
+        $times = array_map([$this, 'toTime'], $timeFilenames);
 
-        $data = array_map([$this, 'toObject'], $snippets, $filenames, $times);
+        $data = array_map([$this, 'toObject'], $snippets, $timeFilenames, $times);
 
         usort($data, [$this, 'lowToHigh']);
 
@@ -85,30 +85,30 @@ PHP;
         return $low->time < $high->time ? -1 : 1;
     }
 
-    private function toFilename($snippet)
+    private function toTimeFilename($snippet)
     {
         assert('is_string($snippet)');
 
-        $filename = sys_get_temp_dir() .
+        $timeFilename = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
-            self::FILENAME_PREFIX .
+            self::TIME_FILENAME_PREFIX .
             md5($snippet);
-        assert('$filename !== false');
+        assert('$timeFilename !== false');
 
-        if (!is_readable($filename)) {
+        if (!is_readable($timeFilename)) {
             $content = $this->toPhp($snippet);
 
-            $success = file_put_contents($filename, $content);
+            $success = file_put_contents($timeFilename, $content);
             assert('$success !== false');
 
-            $success = chmod($filename, 0777);
+            $success = chmod($timeFilename, 0777);
             assert('$success !== false');
         }
 
-        return $filename;
+        return $timeFilename;
     }
 
-    private function toObject($snippet, $filename, $time)
+    private function toObject($snippet, $timeFilename, $time)
     {
         return (object) get_defined_vars();
     }
@@ -118,9 +118,9 @@ PHP;
         assert('is_string($snippet)');
 
         return sprintf(
-            self::TEMPLATE,
+            self::TIME_TEMPLATE,
             $this->setUp(),
-            $this->count(),
+            $this->loopCount(),
             $snippet,
             $this->tearDown()
         );
@@ -130,11 +130,11 @@ PHP;
     {
         assert('is_readable($filename)');
 
-        for ($timeCnt = 0; $timeCnt < $this->times; $timeCnt++) {
+        for ($timeCount = 0; $timeCount < $this->timeCount; $timeCount++) {
             $times[] = (double) `php $filename`;
         }
 
-        $time = array_sum($times) / $this->times;
+        $time = array_sum($times) / $this->timeCount;
 
         return $time;
     }

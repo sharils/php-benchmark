@@ -21,12 +21,12 @@ class PhrofilerSpec extends ObjectBehavior
         ])->shouldBeLikeObjects([
             (object) [
                 'snippet' => 'method_exists($c, "asdf")',
-                'filename' => '/tmp/php-phrofiler-6393db8fc3419cdbe69bb936052d55c3',
+                'timeFilename' => '/tmp/php-phrofiler-time-6393db8fc3419cdbe69bb936052d55c3',
                 'time' => 0.56867098808289,
             ],
             (object) [
                 'snippet' => 'is_callable([$c, "asdf"])',
-                'filename' => '/tmp/php-phrofiler-73d65b5e2fe1987efce58f48f88bf229',
+                'timeFilename' => '/tmp/php-phrofiler-time-73d65b5e2fe1987efce58f48f88bf229',
                 'time' => 0.82373595237732,
             ]
         ]);

@@ -10,8 +10,8 @@ foreach ($profiles as $profile) {
     $profile->php = "php -r '{$argv[1]}; $profile->snippet; {$argv[2]};'";
     $profile->ratio = round($profile->time / $profiles[0]->time * 100) . '%';
     $profile->time .= ' (average seconds)';
-    foreach (['snippet', 'filename', 'php', 'time', 'ratio'] as $profileKey) {
-        printf("%8s: %s\n", $profileKey, $profile->$profileKey);
+    foreach (['snippet', 'timeFilename', 'php', 'time', 'ratio'] as $profileKey) {
+        printf("%12s: %s\n", $profileKey, $profile->$profileKey);
     }
     echo PHP_EOL;
 }
