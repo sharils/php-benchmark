@@ -109,7 +109,7 @@ PHP;
         assert('is_readable($filename)');
 
         for ($timeCount = 0; $timeCount < $this->timeCount; $timeCount++) {
-            $times[] = (double) `php $filename`;
+            $times[] = (double) `$filename`;
         }
 
         $time = array_sum($times) / $this->timeCount;
