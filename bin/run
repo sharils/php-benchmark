@@ -2,10 +2,19 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
+$opt = getopt('s::t::');
+
 $phrofiler = new Sharils\Phrofiler();
-$phrofiler->setUp($argv[1]);
-$phrofiler->tearDown($argv[2]);
-$profiles = $phrofiler->profile(array_slice($argv, 3));
+
+if (isset($opt['s'])) {
+    $phrofiler->setUp($opt['s']);
+}
+
+if (isset($opt['t'])) {
+    $phrofiler->tearDown($opt['t']);
+}
+
+$profiles = $phrofiler->profile(array_slice($argv, count($opt) + 1));
 foreach ($profiles as $profile) {
     $profile->ratio = round($profile->time / $profiles[0]->time * 100) . '%';
     $profile->time .= ' (average seconds)';
