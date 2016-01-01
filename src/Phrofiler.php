@@ -122,6 +122,16 @@ PHP;
         return (object) get_defined_vars();
     }
 
+    private function toFilename($prefix, $snippet)
+    {
+        $filename = sys_get_temp_dir() .
+            DIRECTORY_SEPARATOR .
+            $prefix .
+            md5($this->setUp . $snippet . $this->tearDown);
+
+        return $filename;
+    }
+
     private function toTime($filename)
     {
         assert('is_readable($filename)');
@@ -154,10 +164,7 @@ PHP;
     {
         assert('is_string($snippet)');
 
-        $timeFilename = sys_get_temp_dir() .
-            DIRECTORY_SEPARATOR .
-            self::TIME_FILENAME_PREFIX .
-            md5($this->setUp . $snippet . $this->tearDown);
+        $timeFilename = $this->toFilename(self::TIME_FILENAME_PREFIX, $snippet);
         assert('$timeFilename !== false');
 
         if (!is_readable($timeFilename)) {
@@ -190,10 +197,7 @@ PHP;
     {
         assert('is_string($snippet)');
 
-        $wholeFilename = sys_get_temp_dir() .
-            DIRECTORY_SEPARATOR .
-            self::WHOLE_FILENAME_PREFIX .
-            md5($this->setUp . $snippet . $this->tearDown);
+        $wholeFilename = $this->toFilename(self::WHOLE_FILENAME_PREFIX, $snippet);
         assert('$wholeFilename !== false');
 
         if (!is_readable($wholeFilename)) {
