@@ -1,6 +1,8 @@
 <?php
 namespace Sharils;
 
+use ErrorException;
+
 class Phrofiler
 {
     const TIME_FILENAME_PREFIX = 'php-phrofiler-time-';
@@ -8,6 +10,20 @@ class Phrofiler
     const TIME_TEMPLATE = <<<'PHP'
 #!/usr/bin/env php
 <?php
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (error_reporting() & $severity) {
+        $error = json_encode([
+            $message,
+            0,
+            $severity,
+            $file,
+            $line
+        ]);
+        fwrite(STDERR, $error);
+        exit($severity);
+    }
+});
+
 $success = ob_start();
 assert('$success !== false');
 
@@ -109,6 +125,21 @@ PHP;
         assert('is_readable($filename)');
 
         for ($timeCount = 0; $timeCount < $this->timeCount; $timeCount++) {
+            $proc = proc_open($filename, [
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ], $pipes);
+            assert('is_resource($proc)');
+
+            $error = stream_get_contents($pipes[2]);
+            if ($error) {
+                $error = json_decode($error);
+                assert('is_array($error)');
+                throw new ErrorException(...$error);
+            }
+
+            $time = stream_get_contents($pipes[1]);
+
             $times[] = (double) `$filename`;
         }
 
