@@ -155,7 +155,7 @@ PHP;
         $timeFilename = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             self::TIME_FILENAME_PREFIX .
-            md5($snippet);
+            md5($this->setUp . $snippet . $this->tearDown);
         assert('$timeFilename !== false');
 
         if (!is_readable($timeFilename)) {
@@ -191,7 +191,7 @@ PHP;
         $wholeFilename = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             self::WHOLE_FILENAME_PREFIX .
-            md5($snippet);
+            md5($this->setUp . $snippet . $this->tearDown);
         assert('$wholeFilename !== false');
 
         if (!is_readable($wholeFilename)) {
