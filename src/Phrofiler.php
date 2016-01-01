@@ -10,22 +10,11 @@ class Phrofiler
     const TIME_TEMPLATE = <<<'PHP'
 #!/usr/bin/env php
 <?php
-set_error_handler(function ($severity, $message, $file, $line) {
-    if (error_reporting() & $severity) {
-        $error = json_encode([
-            $message,
-            0,
-            $severity,
-            $file,
-            $line
-        ]);
-        fwrite(STDERR, $error);
-        exit($severity);
-    }
+set_error_handler(function () {
+    $error = implode(PHP_EOL, func_get_args());
+    fwrite(STDERR, $error);
+    exit($severity);
 });
-
-$success = ob_start();
-assert('$success !== false');
 
 %s;
 
@@ -37,9 +26,7 @@ $_ = microtime(true) - $_;
 
 %s;
 
-ob_clean();
-
-echo $_;
+fwrite(STDERR, $_);
 
 PHP;
 
@@ -138,21 +125,30 @@ PHP;
 
         for ($timeCount = 0; $timeCount < $this->timeCount; $timeCount++) {
             $proc = proc_open($filename, [
-                1 => ['pipe', 'w'],
                 2 => ['pipe', 'w'],
             ], $pipes);
             assert('is_resource($proc)');
 
-            $error = stream_get_contents($pipes[2]);
-            if ($error) {
-                $error = json_decode($error);
-                assert('is_array($error)');
-                throw new ErrorException(...$error);
+            $info = stream_get_contents($pipes[2]);
+            assert('$info');
+
+            if (is_numeric($info)) {
+                $time = $info;
+            } else {
+                $info = explode(PHP_EOL, $info);
+                assert('count($info) === 4');
+
+                list($severity, $message, $file, $line) = $info;
+                throw new ErrorException(
+                    $message,
+                    0,
+                    $severity,
+                    $file,
+                    $line
+                );
             }
 
-            $time = stream_get_contents($pipes[1]);
-
-            $times[] = (double) `$filename`;
+            $times[] = $time;
         }
 
         $time = array_sum($times) / $this->timeCount;
