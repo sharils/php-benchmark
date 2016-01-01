@@ -40,6 +40,7 @@ $_ = microtime(true) - $_;
 ob_clean();
 
 echo $_;
+
 PHP;
 
     const WHOLE_FILENAME_PREFIX = 'php-phrofiler-whole-';
@@ -52,6 +53,7 @@ PHP;
 %s;
 
 %s;
+
 PHP;
 
     private $loopCount = 100000;
