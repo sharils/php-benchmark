@@ -16,6 +16,8 @@ set_error_handler(function () {
     exit($severity);
 });
 
+ob_start();
+
 %s;
 
 $_ = microtime(true);
@@ -25,6 +27,8 @@ for ($__ = %d; --$__; ) {
 $_ = microtime(true) - $_;
 
 %s;
+
+ob_end_flush();
 
 fwrite(STDERR, $_);
 
