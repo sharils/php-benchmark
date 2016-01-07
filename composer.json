@@ -20,6 +20,6 @@
         }
     ],
     "bin": [
-        "./bin/run"
+        "./bin/phrofiler"
     ]
 }
