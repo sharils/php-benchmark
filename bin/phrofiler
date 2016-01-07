@@ -12,6 +12,11 @@ foreach ([
 
 $opt = getopt('is::t::');
 
+$snippets = array_slice($argv, count($opt) + 1);
+if (empty($snippets)) {
+    throw new RuntimeException('No snippet to profile');
+}
+
 $phrofiler = new Sharils\Phrofiler();
 
 if (isset($opt['i'])) {
@@ -26,7 +31,7 @@ if (isset($opt['t'])) {
     $phrofiler->tearDown($opt['t']);
 }
 
-$profiles = $phrofiler->profile(array_slice($argv, count($opt) + 1));
+$profiles = $phrofiler->profile($snippets);
 foreach ($profiles as $profile) {
     $profile->ratio =  $profile->ratio * 100 . '%';
     $profile->time .= ' (average seconds)';
