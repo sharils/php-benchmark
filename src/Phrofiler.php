@@ -116,7 +116,19 @@ PHP;
 
         $times = array_map([$this, 'toTime'], $timeFilenames);
 
-        $data = array_map([$this, 'toObject'], $snippets, $timeFilenames, $wholeFilenames, $times);
+        $minTime = min($times);
+        $ratios = array_map(function ($time) use ($minTime) {
+            return round($minTime / $time * 100) / 100;
+        }, $times);
+
+        $data = array_map(
+            [$this, 'toObject'],
+            $snippets,
+            $timeFilenames,
+            $wholeFilenames,
+            $times,
+            $ratios
+        );
 
         usort($data, [$this, 'lowToHigh']);
 
@@ -157,8 +169,13 @@ PHP;
             self::TIME_TEMPLATE_NO_IIFE;
     }
 
-    private function toObject($snippet, $timeFilename, $wholeFilename, $time)
-    {
+    private function toObject(
+        $snippet,
+        $timeFilename,
+        $wholeFilename,
+        $time,
+        $ratio
+    ) {
         return (object) get_defined_vars();
     }
 

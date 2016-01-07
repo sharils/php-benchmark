@@ -20,7 +20,7 @@ if (isset($opt['t'])) {
 
 $profiles = $phrofiler->profile(array_slice($argv, count($opt) + 1));
 foreach ($profiles as $profile) {
-    $profile->ratio = round($profile->time / $profiles[0]->time * 100) . '%';
+    $profile->ratio =  $profile->ratio * 100 . '%';
     $profile->time .= ' (average seconds)';
     foreach (['snippet', 'timeFilename', 'wholeFilename', 'time', 'ratio'] as $profileKey) {
         printf("%13s: %s\n", $profileKey, $profile->$profileKey);
