@@ -31,7 +31,12 @@ if (isset($opt['t'])) {
     $phrofiler->tearDown($opt['t']);
 }
 
-$profiles = $phrofiler->profile($snippets);
+try {
+    $profiles = $phrofiler->profile($snippets);
+} catch (Exception $e) {
+    echo "PHP Error: {$e->getMessage()} in {$e->getFile()} on line {$e->getLine()}", PHP_EOL;
+    exit($e->getCode());
+}
 foreach ($profiles as $profile) {
     $profile->ratio =  $profile->ratio * 100 . '%';
     $profile->time .= ' (average seconds)';
