@@ -13,7 +13,7 @@ class Phrofiler
 set_error_handler(function () {
     $error = implode(PHP_EOL, func_get_args());
     fwrite(STDERR, $error);
-    exit($severity);
+    exit(func_get_arg(0));
 });
 
 call_user_func(function () {
@@ -42,7 +42,7 @@ PHP;
 set_error_handler(function () {
     $error = implode(PHP_EOL, func_get_args());
     fwrite(STDERR, $error);
-    exit($severity);
+    exit(func_get_arg(0));
 });
 
 ob_start();
