@@ -7,7 +7,36 @@ class Phrofiler
 {
     const TIME_FILENAME_PREFIX = 'php-phrofiler-time-';
 
-    const TIME_TEMPLATE = <<<'PHP'
+    const TIME_TEMPLATE_IIFE = <<<'PHP'
+#!/usr/bin/env php
+<?php
+set_error_handler(function () {
+    $error = implode(PHP_EOL, func_get_args());
+    fwrite(STDERR, $error);
+    exit($severity);
+});
+
+ob_start();
+
+call_user_func(function () {
+    %s;
+
+    $_ = microtime(true);
+    for ($__ = %d; --$__; ) {
+        %s;
+    }
+    $_ = microtime(true) - $_;
+
+    %s;
+});
+
+ob_end_flush();
+
+fwrite(STDERR, $_);
+
+PHP;
+
+    const TIME_TEMPLATE_NO_IIFE = <<<'PHP'
 #!/usr/bin/env php
 <?php
 set_error_handler(function () {
@@ -185,7 +214,7 @@ PHP;
         assert('is_string($snippet)');
 
         return sprintf(
-            self::TIME_TEMPLATE,
+            self::TIME_TEMPLATE_NO_IIFE,
             $this->setUp(),
             $this->loopCount(),
             $snippet,
