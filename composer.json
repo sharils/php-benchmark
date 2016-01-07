@@ -1,6 +1,6 @@
 {
-    "name": "sharils/benchmark",
-    "description": "Benchmark PHP",
+    "name": "sharils/phrofiler",
+    "description": "Profile PHP snippets",
     "autoload": {
         "psr-4": {
             "Sharils\\": "./src/"
