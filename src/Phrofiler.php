@@ -30,7 +30,7 @@ call_user_func(function () {
     %s;
 });
 
-ob_end_flush();
+ob_end_clean();
 
 fwrite(STDERR, $_);
 
@@ -57,7 +57,7 @@ $_ = microtime(true) - $_;
 
 %s;
 
-ob_end_flush();
+ob_end_clean();
 
 fwrite(STDERR, $_);
 
