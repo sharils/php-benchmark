@@ -11,8 +11,7 @@ class Phrofiler
 #!/usr/bin/env php
 <?php
 set_error_handler(function () {
-    $error = implode(PHP_EOL, func_get_args());
-    fwrite(STDERR, $error);
+    fwrite(STDERR, implode(PHP_EOL, array_slice(func_get_args(), 0, 4)));
     exit(func_get_arg(0));
 });
 
@@ -40,8 +39,7 @@ PHP;
 #!/usr/bin/env php
 <?php
 set_error_handler(function () {
-    $error = implode(PHP_EOL, func_get_args());
-    fwrite(STDERR, $error);
+    fwrite(STDERR, implode(PHP_EOL, array_slice(func_get_args(), 0, 4)));
     exit(func_get_arg(0));
 });
 
