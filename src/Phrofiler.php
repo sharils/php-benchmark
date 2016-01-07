@@ -16,9 +16,9 @@ set_error_handler(function () {
     exit($severity);
 });
 
-ob_start();
-
 call_user_func(function () {
+    ob_start();
+
     %s;
 
     $_ = microtime(true);
@@ -28,11 +28,11 @@ call_user_func(function () {
     $_ = microtime(true) - $_;
 
     %s;
+
+    ob_end_clean();
+
+    fwrite(STDERR, $_);
 });
-
-ob_end_clean();
-
-fwrite(STDERR, $_);
 
 PHP;
 
@@ -76,6 +76,8 @@ PHP;
 
 PHP;
 
+    private $iife = false;
+
     private $loopCount = 100000;
 
     private $setUp = null;
@@ -83,6 +85,17 @@ PHP;
     private $tearDown = null;
 
     private $timeCount = 10;
+
+    public function iife($iife = null)
+    {
+        if (func_num_args() === 0) {
+            return $this->iife;
+        } else {
+            assert('is_bool($iife)');
+
+            $this->iife = $iife;
+        }
+    }
 
     public function loopCount($loopCount = null)
     {
@@ -137,6 +150,13 @@ PHP;
         return $low->time < $high->time ? -1 : 1;
     }
 
+    private function timeTemplate()
+    {
+        return $this->iife ?
+            self::TIME_TEMPLATE_IIFE :
+            self::TIME_TEMPLATE_NO_IIFE;
+    }
+
     private function toObject($snippet, $timeFilename, $wholeFilename, $time)
     {
         return (object) get_defined_vars();
@@ -147,7 +167,7 @@ PHP;
         $filename = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             $prefix .
-            md5($this->setUp . $snippet . $this->tearDown);
+            md5($this->setUp . $snippet . $this->tearDown . $this->iife);
 
         return $filename;
     }
@@ -214,7 +234,7 @@ PHP;
         assert('is_string($snippet)');
 
         return sprintf(
-            self::TIME_TEMPLATE_NO_IIFE,
+            $this->timeTemplate(),
             $this->setUp(),
             $this->loopCount(),
             $snippet,

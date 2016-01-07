@@ -2,9 +2,13 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-$opt = getopt('s::t::');
+$opt = getopt('is::t::');
 
 $phrofiler = new Sharils\Phrofiler();
+
+if (isset($opt['i'])) {
+    $phrofiler->iife(true);
+}
 
 if (isset($opt['s'])) {
     $phrofiler->setUp($opt['s']);
