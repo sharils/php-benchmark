@@ -1,6 +1,14 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../vendor/autoload.php';
+foreach ([
+    '../vendor',
+    '../../..',
+] as $binToVendor) {
+    $autoload = __DIR__ . "/$binToVendor/autoload.php";
+    if (is_readable($autoload)) {
+        require $autoload;
+    }
+}
 
 $opt = getopt('is::t::');
 
