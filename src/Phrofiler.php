@@ -112,7 +112,9 @@ PHP;
 
         $wholeFilenames = array_map([$this, 'toWholeFilename'], $snippets);
 
-        $times = array_map([$this, 'toTime'], $timeFilenames);
+        foreach ($timeFilenames as $timeFilename) {
+            $times[] = $this->toTime($timeFilename);
+        }
 
         $minTime = min($times);
         $ratios = array_map(function ($time) use ($minTime) {
